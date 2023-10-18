@@ -49,6 +49,15 @@ Biomass<-read.csv(file=paste(wdir,"AbovegroundBiomass2020-2022.csv",sep="/"))
 Roots<-read.csv(file=paste(wdir,"Roots2020-2022.csv",sep="/"))
 PlotTRMT<-read.csv(file=paste(wdir,"ExpDesign.csv",sep="/"))
 
+PlotTRMT$RAINTRT<-as.factor(PlotTRMT$RAINTRT)
+PlotTRMT$DISPERSION<-as.factor(PlotTRMT$DISPERSION)
+PlotTRMT$BLOCK<-as.factor(PlotTRMT$BLOCK)
+PlotTRMT$SUBBLOCK<-as.factor(PlotTRMT$SUBBLOCK)
+PlotTRMT$DISPERSION.FOURLEVELS<-as.factor(PlotTRMT$DISPERSION.FOURLEVELS)
+
+summary(PlotTRMT)
+summary(Biomass)
+summary(Roots)
 
 #Data Joining-----
 
@@ -96,10 +105,9 @@ mtext(expression(paste(bold("Frequency"))),
 
 # Root Glmulti--------
 
-RootsTime<-subset(RootsTime,SPPNO!=0)
-
 df=RootsTime
 response=df$log10RootBiomass
+
 m1 <- lmer(response ~ SPPNO*RAINTRT*DISPERSION*YEAR
            +(1|RAINTRT:SUBBLOCK)+(1|SUBBLOCK)+(1|PLOTNO)
            ,data=df)
@@ -112,8 +120,6 @@ topRB.mod.D2<-glmulti_topfnct(res=res)
 write.csv(topRB.mod.D2,file=paste(wdname,"topRB.mod.D2.csv",sep="/"))
 remove(res,m1)
 
-df=RootsTime
-response=df$log10RootBiomass
 m1 <- lmer(response ~ SPPNO*RAINTRT*DISPERSION.FOURLEVELS*YEAR
            +(1|RAINTRT:SUBBLOCK)+(1|SUBBLOCK)+(1|PLOTNO)
            ,data=df)
@@ -185,6 +191,18 @@ anova(lmerrb.3)
 anova(lmerrb.4)
 anova(lmerrb.5)
 
+summary(lmerrb.1)
+summary(lmerrb.2)
+summary(lmerrb.3)
+summary(lmerrb.4)
+summary(lmerrb.5)
+
+rand(lmerrb.1)
+rand(lmerrb.2)
+rand(lmerrb.3)
+rand(lmerrb.4)
+rand(lmerrb.5)
+
 
 RootAICglmulti<-data.frame(c("lmerrb.1","lmerrb.2","lmerrb.3",
                              "lmerrb.4","lmerrb.5",
@@ -202,6 +220,8 @@ Biomass$log10BMTOTPLOT.g<-log10(Biomass$BMTOTPLOT.g)
 
 df=Biomass
 response=df$log10BMTOTPLOT.g
+
+
 m1 <- lmer(response ~ SPPNO*RAINTRT*DISPERSION.FOURLEVELS*YEAR
            +(1|RAINTRT:SUBBLOCK)+(1|SUBBLOCK)+(1|PLOTNO)
            ,data=df)
@@ -273,6 +293,18 @@ formula.5<-paste(topAB.mod.D2$model[5],"(1|RAINTRT:SUBBLOCK) + (1|SUBBLOCK) + (1
 formula.5 <- str_replace(formula.5, "response ~ ", "")
 lmerab.5.D2<-lmer(paste("log10BMTOTPLOT.g ~ ",formula.5,sep=""),data=df)
 
+anova(lmerab.1)
+anova(lmerab.2)
+anova(lmerab.3)
+
+summary(lmerab.1)
+summary(lmerab.2)
+summary(lmerab.3)
+
+rand(lmerab.1)
+rand(lmerab.2)
+rand(lmerab.3)
+
 ShootAICglmulti<-data.frame(c("lmerab.1","lmerab.2","lmerab.3",
                               "lmerab.1.D2","lmerab.2.D2","lmerab.3.D2","lmerab.4.D2","lmerab.5.D2"),
                             c(topAB.mod.D4$aic,topAB.mod.D2$aic))
@@ -310,6 +342,8 @@ TotalBiomass$log10TotalBiomass<-log10(TotalBiomass$TotalBiomass)
 
 df=TotalBiomass
 response=df$log10TotalBiomass
+
+
 m1 <- lmer(response ~ SPPNO*RAINTRT*DISPERSION*YEAR
            +(1|RAINTRT:SUBBLOCK)+(1|SUBBLOCK)+(1|PLOTNO)
            ,data=df)
@@ -398,6 +432,22 @@ anova(lmertb.4.D2)
 anova(lmertb.5.D2)
 anova(lmertb.6.D2)
 anova(lmertb.7.D2)
+
+summary(lmertb.1.D2)
+summary(lmertb.2.D2)
+summary(lmertb.3.D2)
+summary(lmertb.4.D2)
+summary(lmertb.5.D2)
+summary(lmertb.6.D2)
+summary(lmertb.7.D2)
+
+rand(lmertb.1.D2)
+rand(lmertb.2.D2)
+rand(lmertb.3.D2)
+rand(lmertb.4.D2)
+rand(lmertb.5.D2)
+rand(lmertb.6.D2)
+rand(lmertb.7.D2)
 
 anova(lmerrb.1)
 
